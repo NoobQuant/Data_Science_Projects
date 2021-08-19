@@ -10,9 +10,18 @@
    "*[We] ought to make sure that any response differences between the treated and the untreated group is due to the treatment itself and not to some intrinsic differences between the groups that are unrelated to the treatment*" (Pearl 2009, p.196).
    - For more formal treatment, see Saarela et al (2020).
 
+ - **Ignorability**
+   - TBF
+
+ - **No carryover effect**
+   - Used in panel data setting in Imai & Kim (2019).
+   - Assumption that past treatments do not directly affect current outcome.
+   - $Y_{it}(X_{i1}, X_{i2}, \dots , X_{it}) = Y_{it}(X_{it})$
+
 ## Sources
 
  - Caniglia & Murray (2020): Difference-in-difference in the time of cholera: a gentle introduction for epidemiologists
+ - Imai & Kim (2019): [When should we use unit fixed effects regression models for causal inference with longitudinal data?](https://imai.fas.harvard.edu/research/files/FEmatch.pdf)
  - Pearl (2009): Causality
  - Pearl (2010): [On the Consistency Rule in Causal Inference: Axiom, Definition, Assumption, or Theorem?](https://ftp.cs.ucla.edu/pub/stat_ser/r358.pdf)
  - Saarela, Stephens and Moodie (2020): [The role of exchangeability in causal inference](https://arxiv.org/pdf/2006.01799.pdf)
