@@ -4,6 +4,7 @@
    - Formulation (Pearl, 2009, p. 99): $X=x \implies Y(x, u) = Y$ for every $u$. That is, if the actual value of exposure X turned out to be x, then the value of that outcome Y would take (if X were x) is equal to the actual value of Y. 
    - "*Assumption that is violated whenever versions of treatment/exposure have unintended side effects on the outcomes of interest*" (Pearl 2010).
    - "Consistency is generally satisfied if we can describe a well-defined intervention that reflects the way in which the exposure changed in our data" (Caniglia & Murray 2020).
+   - See also Cole & Frangakis (2009).
 
  - **Exchangeability**
    - Loose formulation: "*You can exchange the treated and the untreated for the same result*" ([Data Talks, Exchangability: Part 1](https://www.youtube.com/watch?v=iUZA5dTgegQ)).
@@ -37,6 +38,7 @@
 ## Sources
 
  - Caniglia & Murray (2020): Difference-in-difference in the time of cholera: a gentle introduction for epidemiologists
+ - [Cole & Frangakis (2009)](https://journals.lww.com/epidem/Fulltext/2009/01000/The_Consistency_Statement_in_Causal_Inference__A.3.aspx): The Consistency Statement in Causal Inference - A Definition or an Assumption?
  - Imai & Kim (2019): [When should we use unit fixed effects regression models for causal inference with longitudinal data?](https://imai.fas.harvard.edu/research/files/FEmatch.pdf)
  - Imbens & Rubin (2015): Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction 
  - Pearl (2009): Causality
