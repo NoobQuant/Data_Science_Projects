@@ -1,0 +1,315 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Dataviz in browser</title>
+
+		<link rel="stylesheet" href="../reveal.js/css/reset.css">
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/nqtheme.css">		
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/monokai.css">
+		<!-- Social media icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<style>		
+		#redtspan{color: red;}
+		#purpletspan{color: rgb(207, 6, 207);}
+		#orangetspan{color: rgba(243, 148, 7, 0.925);}
+		#bluetspan{color: steelblue;}
+		#greentspan{color: #98FB98;}								
+	</style>	
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<!-- Title slide -->
+				<section class="center" style="top: 400px; display: block;">	
+					<h2>Data Visualization in Browser</h2>
+					<p>
+						<a href="http://noobquant.site/">Ville Voutilainen</a><br>
+						2019-11-14
+					</p>
+					<p>
+						<small>
+						Views expressed are those of the presenter.<br>
+						Built using <a href="https://revealjs.com">reveal.js</a>. Tested to work in Chrome. 
+						</small>
+					</p>
+				</section>
+				
+				<!-- In this presentation -->
+				<section>
+					<br>					
+					<h3>In this presentation</h3>
+					<br>
+					<ul>
+						<li class="fragment">Quick motivation for data visualization.</li>
+						<br>
+						<li class="fragment">Basics of creating visualizations in a web browser.</li>
+						<br>
+						<li class="fragment">Hands-on example.</li>		
+					</ul>
+				</section>	
+
+				<!-- About myself-->
+				<section class="center" data-background-iframe="http://noobquant.site/" data-background-interactive>
+					<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+						<h2>About me</h2>
+						<p>Enthuasiast interested in promoting dataviz within finance. See my web page <a href="http://noobquant.site/">noobquant.site</a> for more!</p>
+					</div>
+				</section>	
+
+				<!-- Why dataviz?-->				
+				<section>
+
+					<section class="center">
+					<h2>Why dataviz?</h2>
+					</section>							
+
+					<!-- Vision in the strongest human sense -->
+					<section >
+						<h4>Vision is the strongest human sense</h4>
+						<img src="pics/vision.jpg"  width="100%" height="100%">
+						<p style="font-size:30%;">FreeImages.com/Henrik L.</p>>
+						<aside class="notes"> 
+								<ul>
+									<li>Visual system sends in about 8x more info than other senses combined.</li>
+									<li>Kahnemans' two system: fast and inutive vs. slow and analytical. Vis communication supports particularly the former.</li>																				
+								</ul>
+						</aside>
+					</section>					
+
+					<!-- Advantages of dataviz -->
+					<section>
+						<br>
+						<h2>Advantages of dataviz</h2>
+						<br>
+						<ul>
+							<li class="fragment">In many cases visualizations are the most effective way to convey information.</li>
+							<br>
+							<li class="fragment">May reveal features that otherwise remain hidden.</li>
+							<br>
+							<li class="fragment">Often more approachable than tables and equations.</li>
+						</ul>
+						<aside class="notes"> 
+								<ul>
+									<li>"The greatest value of a picture is when it forces us to notice what we never expected to see." - John Tukey</li>
+									<li>Dataviz is used in business analytics, research, communication...</li>
+								</ul>
+						</aside>
+					</section>
+					
+					<!-- Drake meme -->					
+					<section class="center">
+						<img src="pics/drake_meme.jpg"  width="55%" height="55%">
+						<p style="font-size:30%;">Created using imgflip.com.</p>
+						<aside class="notes"> 
+							<ul>
+								<li>Fair warning: Make visualizations that are useful, not ones that are only flashy!</li>
+								<li>Fair warning: Maximize ink-to-inforation ratio!</li>								
+							</ul>
+						</aside>
+					</section>
+
+					<!-- SLIDE TO BE ADDED LATER-->					
+					<!-- Types of dataviz, from Dataviz Handbook -->
+						<!-- Per dynamicity(?)-->
+							<!-- Static-->
+							<!-- Dynamic-->
+						<!-- Per goal-->
+							<!-- EDA-->
+							<!-- Presenting output-->					
+
+					<!-- Quote summarizing relevance of dataviz-->							
+					<section class="center">
+						<blockquote>
+								&ldquo;We should think of data visualization not only as a way to present findings but also as a tool that helps us think.&rdquo;
+						</blockquote>
+					</section>
+
+					<!-- Reference: Dataviz society-->
+					<section class="center" data-background-iframe="https://www.datavisualizationsociety.com/" data-background-interactive>
+						<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+							<h2>Great place to learn more</h2>
+							<p><a href="https://www.datavisualizationsociety.com">Data Visualization Society</a>.</p>
+						</div>
+					</section>
+
+				</section> <!-- Close Why dataviz?-->
+
+				<!-- Browser viz -->
+				<section 
+				class="fig-container"
+				data-fig-id="fig-forceviz"
+				data-file="scenes/scene_forceviz_show.html">
+					<h2>Dataviz in browser</h2>
+					<p class="fragment current-visible">The idea is to harness browser for presenting data. It involves binding data to the Document Object Model (DOM) that describes the browser window.</p>
+					<br>
+					<p class="fragment current-visible">This will be done with <tspan id = 'redtspan'>Javascript</tspan>.</p>
+					<p class="fragment current-visible">One does not have to become a full-fledged web developer, but (in addition to JS) some <tspan id = 'bluetspan'>HTML</tspan> and <tspan id = 'orangetspan'>CSS</tspan> is a must.</p>																	
+					<aside class="notes"> 
+						<ul>
+							<li>Background viz: data about node size, loc, radius etc. is bound to objects in DOM.</li>
+							<li>Also: simple physics engine set up for interaction between nodes.</li>							
+						</ul>
+					</aside>				
+				</section>
+
+				<!-- Trinity of web dev -->				
+				<section 
+				class="fig-container"
+				data-fig-id="fig-trinity"
+				data-file="scenes/scene_trinity_show.html"
+				data-background="white"
+				data-transitions="8">
+					<h3>Trinity of web dev</h3>
+					<aside class="notes"> 
+						<ul>
+							<li>HyperText Markup Language: Markup language defining content of a web page; HMTL elements are bulding blocks of a page.</li>							
+							<li>Javascript: Scripting language enabling interaction in a webpage.</li>
+							<li>Cascading Style Sheets: Language used to set appearance of a markup document; specific styles to specific objects.</li>
+						</ul>
+					</aside>
+				<!-- ADDITION: Tiles could have a pop-up on hover, giving more in-depth explanation-->
+				</section>
+					
+				<!-- What do we need to get started? -->
+				<section>
+					<br>
+					<h4>What do we need to get started?</h4>
+					<br>
+					<ul>
+						<li class="fragment">Good <tspan id = 'bluetspan'>editor</tspan> (e.g. VSCode).</li>
+						<li class="fragment">Modern <tspan id = 'purpletspan'>web browser</tspan> (e.g. Chrome). <tspan id = 'redtspan'>Not Explorer</tspan>!</li>						
+						<li class="fragment">JS dependencies, e.g. <tspan id = 'orangetspan'>d3</tspan> (others: Vega, Highcharts,...).</li>						
+						<li class="fragment">Optional: web server (e.g. simple localhost server).</li>
+						<li class="fragment">Helpful: Basics understanding of HTTP.</li>
+						<li class="fragment">Helpful: Basics of Scalable Vector Graphics (SVG) and/or HTML canvases.</li>
+					</ul>
+					<aside class="notes"> 
+						<ul>
+							<li>If we page loads data from another, server is needed to enforce same-origin policy.</li>
+							<li>Hypertext Transfer Protocol (HTTP) is the foundation of data communication for the World Wide Web.</li>
+						</ul>
+					</aside>
+				<!-- ADDITION: This slide could be made nicer!-->
+				</section>					
+
+				<!-- What is d3? -->
+				<section class="center" data-background-iframe="https://d3js.org/" data-background-interactive data-background="#FFF">
+					<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+						<p>
+							<tspan id = 'orangetspan'>d3</tspan> is a Javascript library that can be used to manipulate web documents and bind data to them.
+							<br>
+							<br>
+							Hands-on primer: <a href="https://leanpub.com/d3-t-and-t-v4/read">D3 Tips and Tricks v4.x</a>.
+						</p>
+					</div>
+					<aside class="notes"> 
+						<ul>
+							<li>d3-t-and-t-v4: "D3 is all about helping you to take information and make it more accessible to others via web browser".</li>
+							<li>Links data to object. Links static data to interactive displays.</li>							
+						</ul>
+					</aside>
+				</section>								
+
+				<!-- Simple example-->
+				<section>
+
+					<section class="center">
+						<h2>Simple example</h2>
+					</section>
+
+					<section class="center">
+						<h4>Let's build an example where we...</h4>
+						<p class="fragment">... construct a web page from scratch...</p>
+						<p class="fragment">... with an svg...</p>							
+						<p class="fragment">... which has a circle drawn on it...</p>
+						<p class="fragment">... that has special styling...</p>							
+						<p class="fragment">... and moves when clicked!</p>
+						<p class="fragment">Code <a href="https://github.com/NoobQuant/CodingExamples/tree/master/browserviz/simple_circle">here</a>.</p>							
+					</section>
+
+					<section>
+						<br>
+						<h3>HTML page skeleton</h3>
+						<pre><code class="hljs" data-trim data-line-numbers="">
+							&lt;!DOCTYPE html&gt;
+							&lt;html&gt;
+							   &lt;head&gt;
+							   &lt;!-- Header of page: meta info, external imports. --&gt;
+							   &lt;/head&gt;
+
+							   &lt;style&gt;
+							   &lt;!-- Page styling: CSS goes in here! --&gt;
+							   &lt;/style&gt;
+
+							   &lt;body&gt;
+							   &lt;!-- Body of page: HTML or JS go in here! --&gt;
+							   &lt;/body&gt;
+							&lt;/html&gt;
+						</code></pre>
+					</section>
+							
+				</section>
+
+				<!-- Pretty neat, huh?!-->
+				<section class="center" data-background="http://i.giphy.com/90F8aUepslB84.gif">
+					<h2><tspan id = 'redtspan'>Pretty neat, huh?!</tspan></h2>
+				</section>
+
+				<!-- Ending slide-->
+				<section class="center" style="text-align: left">
+					<h1 style="text-align: center">Thank you!</h1>
+					<p style="text-align: center"><a href="https://twitter.com/VilleEcon" class="fa fa-twitter"></a> @VilleEcon</p>
+					<p style="text-align: center"><a href="http://noobquant.site/">noobquant.site</a></p>
+					<p>References</p>
+					<ul style="text-align: left">
+						<li style="font-size:60%">Data visualization handbook (Koponen & Hildén 2019).</li>
+						<li style="font-size:60%">D3 Tips and Tricks v4.x (Malcom Maclean 2018).</li>
+						<li style="font-size:60%">The Visual Display of Quantitative Information (Edward Tufte 1983).</li>
+					</ul>
+				</section>					
+
+			</div>
+			
+		</div>
+
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+
+				history: true,
+				center: false,
+
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true },
+					{ src: 'https://d3js.org/d3.v5.min.js', },
+					{ src: '../reveal.js/plugin/d3js/d3js.js' },
+					{ src: '../reveal.js/plugin/embed-tweet/embed-tweet.js' },								
+				]
+			});
+		</script>
+	</body>
+</html>

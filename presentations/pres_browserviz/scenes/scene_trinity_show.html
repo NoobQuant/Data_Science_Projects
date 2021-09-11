@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <!-- d3-->
+  <script src="https://d3js.org/d3.v5.js" charset="utf-8"></script>
+
+  <!-- Math symbols PUT AS LAST IMPORT!-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_SVG">
+  </script>  
+
+</head>
+
+<style>
+</style>
+
+<body>
+  <script type="module">
+  import * as Module from './scene_trinity_init.js'
+  /************************************************
+  Draw stuff that are in transitions
+  ************************************************/
+   var _transitions = []
+   var _inverse_transitions = []
+
+   _transitions.push(
+  () => {
+        Module.img1.Draw({delay:0, duration:1000})
+        }
+)
+_transitions.push(
+  () => {
+        Module.img2.Draw({delay:0, duration:1000})
+        }
+)
+_transitions.push(
+  () => {
+        Module.img3.Draw({delay:0, duration:1000})
+        }
+)
+_transitions.push(
+  () => {
+        Module.img4.Draw({delay:0, duration:500})
+        }
+)
+_transitions.push(
+  () => {
+        Module.img1.Hide({delay:0, duration:500})
+        Module.img2.Hide({delay:0, duration:500})
+        Module.img3.Hide({delay:0, duration:500})
+        Module.img4.Hide({delay:0, duration:500})
+        Module.img_wp_0.Draw({delay:1000, duration:1000})        
+        }
+)
+_transitions.push(
+  () => {
+        Module.img_wp_1.Draw({delay:0, duration:200})        
+        }
+)
+_transitions.push(
+  () => {
+        Module.img_wp_2.Draw({delay:0, duration:200})        
+        }
+)
+_transitions.push(
+  () => {
+        Module.img_wp_3.Draw({delay:0, duration:400})        
+        }
+)
+
+_inverse_transitions.push(
+  () => {
+        Module.img1.Hide({delay:0, duration:0})
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img2.Hide({delay:0, duration:0})
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img3.Hide({delay:0, duration:0})
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img4.Hide({delay:0, duration:0})
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img1.Draw({delay:0, duration:0})
+        Module.img2.Draw({delay:0, duration:0})
+        Module.img3.Draw({delay:0, duration:0})
+        Module.img4.Draw({delay:0, duration:0})
+        Module.img_wp_0.Hide({delay:0, duration:0})
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img_wp_1.Hide({delay:0, duration:0})        
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img_wp_2.Hide({delay:0, duration:0})        
+        }
+)
+_inverse_transitions.push(
+  () => {
+        Module.img_wp_3.Hide({delay:0, duration:0})        
+        }
+)
+
+  // Transition variables need bo added to global scope!
+  window._transitions = _transitions
+  window._inverse_transitions = _inverse_transitions
+
+  </script> 
+
+</body>
+</html>

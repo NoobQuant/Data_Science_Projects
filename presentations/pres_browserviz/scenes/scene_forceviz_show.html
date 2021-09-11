@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <!-- d3-->
+  <script src="https://d3js.org/d3.v5.js" charset="utf-8"></script>
+
+  <!-- Math symbols PUT AS LAST IMPORT!-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_SVG">
+  </script>  
+
+</head>
+
+<style>
+</style>
+
+<body>
+  <script type="module">
+ 
+    // Module imports
+    import {SimpleCanvas} from '../../animlib/src/functions/SimpleCanvas.js'
+    import {NQBGColors,NQColors,NQTextColors,NQFonts} from '../../animlib/src/variables/NQ_colors_and_fonts.js'    
+    import {ForceLayout} from '../../animlib/src/classes/ForceLayout.js'
+
+    let timing = 0
+    
+    // Scalable svg
+    const svg = d3.select("body").append("div").append("svg")
+                  .attr('id','bgsvg')    
+                  .attr('viewBox','0 0 ' + 1920 + ' ' + 1080)
+                  .attr('preserveAspectRatio','xMidYMid meet')
+                  .style("width", '98%')
+                  .style("height", '98%')
+                  .style("display", "block")
+                  .style("position", "absolute");
+    /*********************************************
+     * Define nodes data for 1st force
+    *********************************************/
+    let nodes = d3.range(2).map(function(d,i) {
+        return { 
+                name: i
+                ,groupid: 1
+                ,xCenter: 1000
+                ,yCenter: 550                    
+                ,color: NQColors.steelblue
+                ,radius: 15
+                ,x: 600
+                ,y: 200
+                ,fixed: true             
+            }
+    })
+    /*********************************************
+     * Function for pushing new node
+    *********************************************/
+    function PushNewNode(nodes,counter){
+
+        let randint = Math.floor(Math.random() * 11)
+        let xlocs = [0, 100, 1800, 400, 1000, 1100, 1400, 1700, 600, 850]
+        let ylocs = [5, 100, 1000, 900, 200, 5, 400, 800, 800, 200]
+        let colors = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2","#af7aa1","#fbb4ae"]        
+        nodes.push({
+            "name": "new_node" + counter
+            ,"groupid": 1       
+            ,"xCenter": 1000
+            ,"yCenter": 550         
+            ,"radius": 15
+            //,"color": colors[randint]
+            ,"color": "steelblue"            
+            ,"x": xlocs[randint]
+            ,"y": ylocs[randint]            
+            ,fixed: true
+            })
+        return nodes
+    }
+    /*********************************************
+     * Define force simulation
+    *********************************************/
+    let animationtickinterval = 20
+    let force1params = 
+    {
+        nodes : nodes
+        ,id    : "forcelayout0"    
+    } 
+    let Force1 = new ForceLayout(force1params)
+    Force1.Activate({nodes:nodes}) // Activate starting nodes
+    /*********************************************
+     * Animate
+    *********************************************/
+    // Animate force and return its timer    
+    timing = timing + 500
+    let animTimer1 = Force1.Draw({delay:timing,tickInterval:animationtickinterval})
+
+    // Add more nodes one-at-a-time to existing force layout
+    // This is done in a manual timer loop
+    timing = timing + 2000
+    d3.timeout(function() {
+        
+        let counter = 0
+        let newnodecounter = 0
+        let moddivisor = 150 // 5 = every 10th of a second if animationtickinterval = 20      
+        let numbernewnodes = 250 
+        let flagnomorenodes = false
+        // Stop current ective force timer
+        Force1.activeTimer.stop()
+        let animTimer3 = d3.interval( function(elapsed){
+        // at steady intervals, add new node and reheat animation
+        if (counter%moddivisor == 0){
+            if (flagnomorenodes === false){
+            PushNewNode(nodes,counter)          
+            Force1.Activate({nodes:nodes})     
+            }
+            // reheat force animation
+            Force1.simulation.alphaTarget(0.1).restart()
+            Force1.simulation.stop()
+            newnodecounter += 1          
+        }
+        // Animate force
+        Force1.Tick()
+        // Check if still new nodes
+        if (newnodecounter >= numbernewnodes) {flagnomorenodes = true}
+        counter += 1
+        },animationtickinterval)
+    },timing)
+
+  </script> 
+
+</body>
+</html>
