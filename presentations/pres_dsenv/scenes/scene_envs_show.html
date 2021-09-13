@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- d3-->
+  <script src="https://d3js.org/d3.v5.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <script type="module">
+  import * as Mod from './scene_envs_init.js'
+
+  /***************************************************
+  Get parameters from init file
+  ***************************************************/
+  let width = Mod.canvas_width
+  let height = Mod.canvas_height
+  let hook_base_pos_x = Mod.hook_base_pos_x
+  let hook_base_pos_y = Mod.hook_base_pos_y
+  let hook_base_pos = [hook_base_pos_x, hook_base_pos_y]
+  let div_step_x = Mod.div_step_x
+  let rect_start_x = Mod.rect_start_x
+  let rect_start_y = Mod.rect_start_y
+  let section1_pos_x = Mod.section1_pos_x
+  let section2_pos_x = Mod.section2_pos_x
+  let section3_pos_x = Mod.section3_pos_x
+  let bottom_pos = Mod.bottom_pos
+  let rect_bigger_height = Mod.rect_bigger_height
+  let rect_smaller_height = Mod.rect_smaller_height
+  let rect_width = Mod.rect_width
+  let tf_exp_1_str = Mod.tf_exp_1_str
+  let tf_exp_2_str = Mod.tf_exp_2_str
+  let tf_exp_3_str = Mod.tf_exp_3_str
+  let tf_exp_4_str = Mod.tf_exp_4_str
+  let tf_exp_5_str = Mod.tf_exp_5_str
+
+  /************************************************
+  Draw stuff that are not in transitions
+  ************************************************/
+
+  Mod.text_source.Draw({delay:0, duration:200})
+
+  /************************************************
+  Transitions
+  ************************************************/
+
+  var _transitions = []
+  var _inverse_transitions = []
+
+  // Transition 1: Make hook and its track appear
+  _transitions.push(
+    () => {
+
+      Mod.img_hook.Draw({delay:0, duration:500})
+      Mod.line_hook.Draw({delay:0, duration:500, params:{"drawType":"drawpath"}})
+      Mod.tf_exp_1.Draw({delay:0, duration:500})
+
+    }
+  )
+
+  // Transition 2: Drop base environment Python block
+  _transitions.push(
+    () => {
+
+      // Update explanation
+      Mod.tf_exp_1.UpdateText({delay:0, duration:500, params:{text:tf_exp_2_str}})
+      // Rectangle appears
+      Mod.rect_py1.Draw({delay:0, duration:500})
+      // Move hook and rectangle, draw separator and environment name
+      Mod.img_hook.Update({
+        delay: 1000,
+        duration: 1000,
+        params: {
+          "pos": [section1_pos_x, hook_base_pos_y],
+          "ease": d3.easeCubicInOut,
+        }
+      })
+      Mod.line_sep1.Draw({delay:1000, duration:1000, params:{"drawType":"drawpath"}})
+      Mod.rect_py1.Update({
+        delay: 1000,
+        duration: 1000,
+        params: {
+          "pos": [section1_pos_x - (hook_base_pos_x - rect_start_x), rect_start_y],
+          "ease": d3.easeCubicInOut},
+      })
+      Mod.tf_names_1.Draw({delay:1000, duration:500})
+      // Drop block
+      Mod.rect_py1.Update({
+        delay: 2300,
+        duration: 700,
+        params: {
+          "pos": [section1_pos_x - (hook_base_pos_x - rect_start_x), bottom_pos+rect_bigger_height],
+          "ease": d3.easePoly,
+        },
+      })
+      // Move hook back
+      Mod.img_hook.Update({
+        delay: 2700,
+        duration: 1000,
+        params: {
+          "pos":hook_base_pos,
+          "ease": d3.easeCubicInOut
+        }
+      })
+
+    }
+  )
+
+  // Transition 3: Drop base environment Python packages
+  _transitions.push(
+    () => {
+
+      // Update explanation
+      Mod.tf_exp_1.UpdateText({delay:0, duration:500, params:{text:tf_exp_3_str}})
+      // Loop over rectangle drops
+      let el_pos_y = [
+        bottom_pos+rect_smaller_height+rect_bigger_height,
+        bottom_pos+rect_smaller_height*2+rect_bigger_height,
+      ]
+      let delay = 4500
+      for (let [counter, el] of [Mod.rect_pyp1, Mod.rect_pyp2].entries()) {
+        // Rectangle appears
+        el.Draw({delay:delay*counter, duration:500})
+        // Move hook and rectangle
+        Mod.img_hook.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section1_pos_x, hook_base_pos_y],
+            "ease": d3.easeCubicInOut,
+          }
+        })
+        el.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section1_pos_x - (hook_base_pos_x - rect_start_x), rect_start_y],
+            "ease": d3.easePoly,
+          },
+        })
+        // Drop package
+        el.Update({
+          delay: 2300+delay*counter,
+          duration: 700,
+          params: {
+            "pos": [section1_pos_x - (hook_base_pos_x - rect_start_x), el_pos_y[counter]],
+            "ease": d3.easeExpIn,
+          },
+        })
+        // Move hook back
+        Mod.img_hook.Update({
+          delay: 2700+delay*counter,
+          duration: 1000,
+          params: {
+            "pos":hook_base_pos,
+            "ease": d3.easeCubicInOut,
+          }
+        })
+      }
+
+    }
+  )
+
+  // Transition 4: Drop additional environment stuff
+  _transitions.push(
+    () => {
+
+      // Update explanation
+      let mytext = "Create additional <i>environments</i> alongside root environment. Additional environment can contain e.g. different Python version with other packages."
+      Mod.tf_exp_1.UpdateText({delay:0, duration:500, params:{text:tf_exp_4_str}})
+      // Draw environment separator
+      Mod.line_sep2.Draw({delay:0, duration:1000, params:{"drawType":"drawpath"}})
+      Mod.tf_names_2.Draw({delay:100, duration:500})
+      // Loop over rectangle drops
+      let el_pos_y = [
+        bottom_pos+rect_bigger_height,
+        bottom_pos+rect_smaller_height+rect_bigger_height,
+      ]
+      let delay = 5000
+      for (let [counter, el] of [Mod.rect_py2, Mod.rect_pyp3].entries()) {
+        // Rectangle appears
+        el.Draw({delay:delay*counter, duration:500})
+        // Move hook and rectangle
+        Mod.img_hook.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section2_pos_x, hook_base_pos_y],
+            "ease": d3.easeCubicInOut,
+          }
+        })
+        el.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section2_pos_x - (hook_base_pos_x - rect_start_x), rect_start_y],
+            "ease": d3.easePoly,
+          },
+        })
+        // Drop package
+        el.Update({
+          delay: 2300+delay*counter,
+          duration: 700,
+          params: {
+            "pos": [section2_pos_x - (hook_base_pos_x - rect_start_x), el_pos_y[counter]],
+            "ease": d3.easeExpIn,
+          },
+        })
+        // Move hook back
+        Mod.img_hook.Update({
+          delay: 2700+delay*counter,
+          duration: 1000,
+          params: {
+            "pos":hook_base_pos,
+            "ease": d3.easeCubicInOut,
+          }
+        })
+      }
+
+    }
+  )
+
+  // Transition 5: Drop Python + R environment stuff
+  _transitions.push(
+    () => {
+
+      // Update explanation
+      Mod.tf_exp_1.UpdateText({delay:0, duration:500, params:{text:tf_exp_5_str}})
+      Mod.tf_names_3.Draw({delay:100, duration:500})
+      // Loop over rectangle drops
+      let el_pos_y = [
+        bottom_pos+rect_bigger_height,
+        bottom_pos+rect_bigger_height*2,
+        bottom_pos+rect_smaller_height+rect_bigger_height*2,
+      ]
+      let delay = 5000
+      for (let [counter, el] of [Mod.rect_py3, Mod.rect_r, Mod.rect_rp].entries()) {
+        // Rectangle appears
+        el.Draw({delay:delay*counter, duration:500})
+        // Move hook and rectangle
+        Mod.img_hook.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section3_pos_x, hook_base_pos_y],
+            "ease": d3.easeCubicInOut,
+          }
+        })
+        el.Update({
+          delay: 1000+delay*counter,
+          duration: 1000,
+          params: {
+            "pos": [section3_pos_x - (hook_base_pos_x - rect_start_x), rect_start_y],
+            "ease": d3.easePoly,
+          },
+        })
+        // Drop package
+        el.Update({
+          delay: 2300+delay*counter,
+          duration: 700,
+          params: {
+            "pos": [section3_pos_x - (hook_base_pos_x - rect_start_x), el_pos_y[counter]],
+            "ease": d3.easeExpIn,
+          },
+        })
+        // Move hook back
+        Mod.img_hook.Update({
+          delay: 2700+delay*counter,
+          duration: 1000,
+          params: {
+            "pos":hook_base_pos,
+            "ease": d3.easeCubicInOut,
+          }
+        })
+      }
+
+    }
+  )
+
+  /************************************************
+  Reverse transitions
+  ************************************************/
+
+  // Reverse transition 1
+  _inverse_transitions.push(
+    () => {
+
+      Mod.tf_exp_1.Hide({delay:0, duration:0})
+      Mod.img_hook.Hide({delay:0, duration:0})
+      Mod.line_hook.Hide({delay:0, duration:0})
+
+    }
+  )
+
+  // Reverse transition 2
+  _inverse_transitions.push(
+    () => {
+
+      Mod.tf_names_1.Hide({delay:0, duration:0})
+      Mod.tf_exp_1.UpdateText({delay:0, duration:0, params:{text:tf_exp_1_str}})
+      Mod.line_sep1.Hide({delay:0, duration:0})
+      Mod.rect_py1.Update({
+        delay: 0,
+        duration: 0,
+        params: {
+          "pos": [rect_start_x, rect_start_y],
+        }
+      })
+      Mod.rect_py1.Hide({delay:1, duration:0})
+
+    }
+  )
+
+  // Reverse transition 3
+  _inverse_transitions.push(
+    () => {
+
+      Mod.tf_exp_1.UpdateText({delay:0, duration:0, params:{text:tf_exp_2_str}})
+      for (let [counter, el] of [Mod.rect_pyp1, Mod.rect_pyp2].entries()) {
+        el.Update({
+          delay: 0,
+          duration: 0,
+          params: {
+            "pos": [rect_start_x, rect_start_y],
+          }
+        })
+        el.Hide({delay:1, duration:0})
+      }
+
+    }
+  )
+
+  // Reverse transition 4
+  _inverse_transitions.push(
+    () => {
+
+      Mod.tf_exp_1.UpdateText({delay:0, duration:0, params:{text:tf_exp_3_str}})
+      Mod.tf_names_2.Hide({delay:0, duration:0})
+      Mod.line_sep2.Hide({delay:0, duration:0})
+      for (let [counter, el] of [Mod.rect_py2, Mod.rect_pyp3].entries()) {
+        el.Update({
+          delay: 0,
+          duration: 0,
+          params: {
+            "pos": [rect_start_x, rect_start_y],
+          }
+        })
+        el.Hide({delay:1, duration:0})
+      }
+
+    }
+  )
+
+  // Reverse transition 5
+  _inverse_transitions.push(
+    () => {
+
+      Mod.tf_exp_1.UpdateText({delay:0, duration:0, params:{text:tf_exp_4_str}})
+      Mod.tf_names_3.Hide({delay:0, duration:0})
+      for (let [counter, el] of [Mod.rect_py3, Mod.rect_r, Mod.rect_rp].entries()) {
+        el.Update({
+          delay: 0,
+          duration: 0,
+          params: {
+            "pos": [rect_start_x, rect_start_y],
+          }
+        })
+        el.Hide({delay:1, duration:0})
+      }
+
+    }
+  )
+
+  /************************************************
+  Add transition variables to global scope
+  ************************************************/
+
+  window._transitions = _transitions
+  window._inverse_transitions = _inverse_transitions
+
+  </script>
+
+</body>
+</html>

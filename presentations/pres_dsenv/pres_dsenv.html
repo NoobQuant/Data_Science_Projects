@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>NoobQuant conda environments</title>
+
+		<link rel="stylesheet" href="../reveal.js/css/reset.css">
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/nqtheme.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/monokai.css">
+		<!-- Social media icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<!-- Title slide -->
+				<section class="center" style="top: 400px; display: block;">	
+						<h2>NoobQuant conda environments</h2>
+						<p>
+							<a href="http://noobquant.site/">Ville Voutilainen</a><br>
+							2021-09-16
+						</p>
+						<p>
+							<small>
+							* Views expressed are those of the presenter.<br>
+							Presentation tested to work in Chrome.
+							</small>
+						</p>
+				</section>
+
+				<!-- In this presentation -->
+				<section>
+					<h3>In this presentation</h3>
+					<br>
+					<ul>
+						<li class="fragment">Introduction to Anaconda with Python and R.</li>
+						<br>
+						<li class="fragment">Installing and using custom conda environments.</li>
+					</ul>
+				</section>
+
+				<!-- About myself slide-->
+				<section class="center" data-background-iframe="http://noobquant.site/" data-background-interactive>
+					<div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+						<h2>More about me</h2>
+						<p><a href="http://noobquant.site/">noobquant.site</a></p>
+						<p style="text-align: left"><a href="https://twitter.com/VilleEcon" class="fa fa-twitter"></a> @VilleEcon</p>
+					</div>
+				</section>
+
+				<section >
+					<h3>Anaconda for Python and R</h3>
+					<ul>
+						<li class="fragment"><tspan id = 'orangetspan'>Anaconda</tspan> is a popular data science platform for <tspan id = 'greentspan'>Python</tspan> and <tspan id = 'bluetspan'>R</tspan>.</li>
+						<li class="fragment">It comes pre-installed with over 1000 packages and libraries.</li>
+						<li class="fragment">Python, R, and their packages are used within <tspan id = 'purpletspan'>environments</tspan>.</li>
+						<li class="fragment">Environments are managed with <tspan id = 'redtspan'>conda</tspan>, Anaconda's packages manager.</li>												
+					</ul>
+				</section>
+
+				<!-- What can we do-->
+				<section>
+					<h3>What can we do with the environments?</h3>
+					<ul>
+						<li class="fragment">Run Python in VSCode or Jupyter Lab.</li>
+						<li class="fragment">Run R in RStudio or Jupyter Lab.</li>
+						<li class="fragment">Call R code from a Python instance.</li>
+						<li class="fragment">Use typical Python data science packages such as pandas and scikit learn.</li>
+						<li class="fragment">Use typical R data science packages such as tidyverse.</li>
+						<li class="fragment">Fetch economic time series from public APIs using rjsdmx.</li>
+					</ul>
+				</section>
+
+				<!-- Animation for Anaconda environments -->
+				<section
+					class="fig-container"
+					data-fig-id="scene_envs"
+					data-file="scenes/scene_envs_show.html"
+					data-transitions="5"> <!--THIS NEEDS TO BE CHANGED DEPENDING ON # OF TRANSITIONS IN THE SCENE!-->
+				</section>
+
+				<!-- About how to install the environments -->
+				<section>
+					<h2>Creating environments</h2>
+
+					<p class="fragment"><tspan id = 'bluetspan'>base</tspan> environment can be used out-of-box after installation. In Anaconda prompt:</p>
+					<pre class="fragment">
+						<code data-trim data-noescape>
+							conda activate base
+						</code>
+					</pre>
+					<p class="fragment">We want to install additional <tspan id = 'purpletspan'>development environment</tspan>.</p>
+					<p class="fragment">Our environment <tspan id = 'redtspan'>dev2018</tspan> contains packages for Python based work, with occasional estimations in R:</p>
+					<pre class="fragment">
+						<code data-trim data-noescape>
+							conda create --name dev2018 anaconda python=3.6
+							r=3.6.0 rest_of_packages
+						</code>
+					</pre>
+
+				</section>
+
+				<section>
+					<h2>Creating environments, condt.</h2>
+					<p class="fragment">To use Jupyter, we need to register kernels for both new Python and R executables:</p>
+					<pre class="fragment">
+						<code data-trim data-noescape>
+						conda activate dev2018
+						python -m ipykernel install --user --name dev2018_py --display-name "dev2018_py"
+						R
+						IRkernel::installspec(name='dev2018_r', displayname='dev2018_r')
+						quit()
+						</code>
+					</pre>
+				</section>
+
+				<section>
+					<h2>Installing packages</h2>
+					<p class="fragment">The benefit of using conda environments comes from dependency management.</p>
+					<p class="fragment">Always try installing first with conda! For example:</p>
+					<pre class="fragment">
+						<code data-trim data-noescape>
+						conda activate dev2018
+						conda install pckg_name
+						</code>
+					</pre>
+					<p class="fragment">If installing via conda fails, one can try typical solutions:</p>
+					<pre class="fragment">
+						<code data-trim data-noescape>
+						# Python
+						conda activate dev2018
+						pip install pckg_name
+						# R
+						install.packages("pckg_name")
+						</code>
+					</pre>
+				</section>
+
+				<!-- Ending slide-->
+				<section class="center" style="text-align: left">
+					<h1 style="text-align: center">Thank you!</h1>
+					<p style="text-align: center"><a href="https://twitter.com/VilleEcon" class="fa fa-twitter"></a> @VilleEcon</p>
+					<p style="text-align: center"><a href="http://noobquant.site/">noobquant.site</a></p>
+					<p>References:</p>
+					<ul style="text-align: left">
+						<li style="font-size:60%">  <a href="https://github.com/NoobQuant/dsenvs/blob/main/condaenv.md">conda data science environments</a></li>
+					</ul>
+				</section>
+
+			</div>
+			
+		</div>
+
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+
+				history: true,
+				center: false,
+
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true },
+					{ src: 'https://d3js.org/d3.v5.min.js', },
+					{ src: '../reveal.js/plugin/d3js/d3js.js' },
+					{ src: '../reveal.js/plugin/embed-tweet/embed-tweet.js' },
+				]
+			});
+		</script>
+	</body>
+</html>
