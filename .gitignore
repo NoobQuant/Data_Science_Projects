@@ -1,5 +1,5 @@
 .ipynb_checkpoints
 .vscode
 .quarto
-
 /.quarto/
+__pycache__
