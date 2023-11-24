@@ -314,7 +314,7 @@ def plot_panel_data(data, selected_individuals=None, **kwargs):
 
     fig.tight_layout()
 
-def plot_repcrossec_data(data, prints="skip time points"):
+def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     r"""Plots simulated repeated cross-section data.
 
     Parameters
@@ -327,6 +327,8 @@ def plot_repcrossec_data(data, prints="skip time points"):
     **kwargs : dict
     """
 
+    figsize = kwargs.get("figsize", (14, 10))
+    
     # Check inputs
     assert prints in ["all", "none", "skip time points"], \
         "Invalid parameter prints!"
@@ -361,7 +363,7 @@ def plot_repcrossec_data(data, prints="skip time points"):
         ax.legend()
 
     # Figure skeleton
-    fig = plt.figure(figsize=(14, 10))
+    fig = plt.figure(figsize=figsize)
 
     # Control group
     ax = fig.add_subplot(2, 1, 1)
@@ -462,7 +464,7 @@ def plot_repcrossec_data(data, prints="skip time points"):
             (means["control_post"] - means["control_before"])
         ))
 
-def parallel_trends_plot(data):
+def parallel_trends_plot(data, **kwargs):
     r"""Plots group averages for parallel trends investigation.
 
     Parameters
@@ -470,6 +472,8 @@ def parallel_trends_plot(data):
     data : dict
         Output from simulate_did_data().
     """
+
+    figsize = kwargs.get("figsize", (12, 8))
 
     # Get frames separately for different groups
     treatment = data["observed"].query("treatment_group=='treatment'").copy()
@@ -485,7 +489,7 @@ def parallel_trends_plot(data):
     colors = return_colors()
 
     # Figure skeleton
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=figsize)
 
     # First axis: averages in absolute units
     ax = fig.add_subplot(2, 1, 1)
