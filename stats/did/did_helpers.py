@@ -25,8 +25,10 @@ def simulate_did_data(
         Total number of individuals.
     param_treatprob : float, optional
         Probability of being in group j=T.
-    tau : float, optional
+    param_tau : float, optional
         Treatment effect.
+    param_treat_eff_trend : boolean, optional
+        Is treatment effect linearly growing? Defaults to False.
     param_gamma_c : float, optional
         Control group specific constant effect.
     param_gamma_t : float, optional
@@ -64,6 +66,7 @@ def simulate_did_data(
     param_N = kwargs.get("param_N", 600)
     param_treatprob = kwargs.get("param_treatprob", 0.5)
     param_tau = kwargs.get("param_tau", -2)
+    param_treat_eff_trend = kwargs.get("param_treat_eff_trend", False)
     param_gamma_c = kwargs.get("param_gamma_c", 0)
     param_gamma_t = kwargs.get("param_gamma_t", 0)
     param_xi = kwargs.get("param_xi", lambda t: t)
@@ -187,13 +190,25 @@ def simulate_did_data(
     # Save frame with counterfactual treated values
     df_cf = df[df["treatment_group"]=="treatment"].copy()
 
+    # Treatment effect
+    if param_treat_eff_trend:
+        # Linear trend in treatment effect
+        df["treatment_effect"] = np.where(
+            (df["treatment_group"]=="treatment") & (df["time_group"]=="post"),
+            (df["t"] - param_last_pre_timepoint) * param_tau,
+            0,
+        )
+    else:
+        # Constant treatment effect
+        df["treatment_effect"] = np.where(
+            (df["treatment_group"]=="treatment") & (df["time_group"]=="post"),
+            param_tau,
+            0,
+        )
+
     # Now append interaction to non-treated potential outcomes to get observed
     # values frame
-    df["Y"] = np.where(
-        (df["treatment_group"]=="treatment") & (df["time_group"]=="post"),
-        df["Y"] + param_tau,
-        df["Y"],
-    )
+    df["Y"] = df["Y"].copy() + df["treatment_effect"].copy()
 
     # Calculate and save mean values of outcome from observed values
     means = {}
