@@ -241,11 +241,25 @@ def simulate_did_data(
                 "Y"
             ].mean()
 
-    # Return frames and calculated means
+    # Return frames, calculated means, and used parameters
     return {
         "observed": df,
         "treatment_cf": df_cf,
-        "means": means
+        "means": means,
+        "params": {
+            "param_no_t": param_no_t,
+            "param_last_pre_timepoint": param_last_pre_timepoint,
+            "param_N": param_N,
+            "param_treatprob": param_treatprob,
+            "param_tau": param_tau,
+            "param_treat_eff_trend": param_treat_eff_trend,
+            "param_gamma_c": param_gamma_c,
+            "param_gamma_t": param_gamma_t,
+            "param_xi": param_xi,
+            "param_xtype": param_xtype,
+            "param_x_kwargs": param_x_kwargs,
+            "param_sigma_e": param_sigma_e,
+        }
     }
 
 def plot_panel_data(data, selected_individuals=None, **kwargs):
@@ -342,8 +356,8 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     **kwargs : dict
     """
 
-    figsize = kwargs.get("figsize", (14, 10))
-    
+    figsize = kwargs.get("figsize", (13, 9))
+
     # Check inputs
     assert prints in ["all", "none", "skip time points"], \
         "Invalid parameter prints!"
@@ -362,44 +376,87 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     means = data["means"]
 
     # Helpers for plots
-    time_fe_mean_line_pos = [
-        (0, 0.1),
-        (0.175, 0.275),
-        (0.375, 0.475),
-        (0.55, 0.65),
-        (0.75, 0.825),
-        (0.90, 1)
-    ]
     colors = return_colors()
     def format_ax(ax):
         ax.set_ylabel("Y")
-        ax.axvline(last_pre_timepoint+0.5, linestyle="-", c=colors[0], linewidth=2)
-        #ax.set_ylim(-4, 10)
+        ax.axvline(
+            last_pre_timepoint+0.5,
+            linestyle="-",
+            c=colors[0],
+            linewidth=2
+        )
         ax.legend()
+        ax.set_xlim(0-1, no_periods)
 
     # Figure skeleton
     fig = plt.figure(figsize=figsize)
 
-    # Control group
+    #############################
+    # Control group plot
+    #############################
     ax = fig.add_subplot(2, 1, 1)
+
+    # Observations
     control.plot.scatter(
-        x="t", y="Y", ax=ax, s=1, c=colors[3], label="Realized observations")
-    ax.axhline(y=means["control_before"], xmin=0, xmax=0.5, linestyle="--",
-        c=colors[3], label="Realized pre/post-period means and individual time-point means")
-    ax.axhline(y=means["control_post"], xmin=0.5, xmax=1.0, linestyle="--",
-        c=colors[3])
-    for t, xminmax in zip(range(no_periods), time_fe_mean_line_pos):
-        ax.axhline(y=means["control_t" + str(t)], xmin=xminmax[0],
-            xmax=xminmax[1], linestyle="--", c=colors[3])
+        x="t",
+        y="Y",
+        ax=ax,
+        s=1,
+        c=colors[3],
+        alpha=0.2,
+        label="Realized observations"
+    )
+
+    # Pre mean
+    ax.axhline(
+        y=means["control_before"],
+        xmin=0,
+        xmax=0.5,
+        linestyle="--",
+        c=colors[3],
+        label="Realized pre/post-period means and individual time-point means"
+    )
+
+    # Post mean
+    ax.axhline(
+        y=means["control_post"],
+        xmin=0.5,
+        xmax=1.0,
+        linestyle="--",
+        c=colors[3]
+    )
+
+    # Means for individual periods
+    for t in range(no_periods):
+        ax.plot(
+            [t-0.5, t+0.5],
+            [means["control_t" + str(t)], means["control_t" + str(t)]],
+            linestyle="--",
+            c=colors[3]
+        )
+
+    # Format axis
     format_ax(ax)
     ax.set_title("Control group")
     ax.set_xlabel(None)
 
-    # Treatment group
+    #############################
+    # Treatment group plot
+    #############################
     ax = fig.add_subplot(2, 1, 2)
-    # Realized
-    treatment.plot.scatter(x="t", y="Y", ax=ax, s=1, c=colors[3],
-        label="Realized observations")
+
+    # Realized observations
+    treatment.plot.scatter(
+        x="t",
+        y="Y",
+        ax=ax,
+        s=1,
+        c=colors[3],
+        alpha=0.2,
+        label="Realized observations"
+    )
+
+    # Pre mean realized
     ax.axhline(
         y=means["treatment_before"],
         xmin=0,
@@ -408,11 +465,25 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
         c=colors[3],
         label="Realized pre/post-period means and individual time-point means"
     )
-    ax.axhline(y=means["treatment_post"], xmin=0.5, xmax=1.0, linestyle="--",
-        c=colors[3])
-    for t, xminmax in zip(range(no_periods), time_fe_mean_line_pos):
-        ax.axhline(y=means["treatment_t" + str(t)], xmin=xminmax[0],
-            xmax=xminmax[1], linestyle="--", c=colors[3])
+
+    # Post mean realized
+    ax.axhline(
+        y=means["treatment_post"],
+        xmin=0.5,
+        xmax=1.0,
+        linestyle="--",
+        c=colors[3]
+    )
+
+    # Realized means for individual periods
+    for t in range(no_periods):
+        ax.plot(
+            [t-0.5, t+0.5],
+            [means["treatment_t" + str(t)], means["treatment_t" + str(t)]],
+            linestyle="--",
+            c=colors[3]
+        )
+
     # Counterfactual (unobserved)
     treatment_cf.query("time_group == 'after'").plot.scatter(
         x="t",
@@ -420,16 +491,29 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
         ax=ax,
         color=colors[6],
         s=1,
+        alpha=0.2,
         label="Counterfactual observations (unobserved)"
     )
-    ax.axhline(y=means["treatment_cf_post"], xmin=0.5, xmax=1.0, linestyle="--",
-        c=colors[6], label="Counterfactual post-period mean (unobserved)")
-    for t, xminmax in zip(
-        range(last_pre_timepoint+1, no_periods),
-        time_fe_mean_line_pos[last_pre_timepoint+1:]
-    ):
-        ax.axhline(y=means["treatment_cf_t" + str(t)], xmin=xminmax[0],
-            xmax=xminmax[1], linestyle="--", color=colors[6])
+
+    # Post mean counterfactual
+    ax.axhline(
+        y=means["treatment_cf_post"],
+        xmin=0.5,
+        xmax=1.0,
+        linestyle="--",
+        c=colors[6],
+        label="Counterfactual post-period mean (unobserved)"
+    )
+
+    # Counterfactual means for individual periods
+    for t in range(last_pre_timepoint+1, no_periods):
+        ax.plot(
+            [t-0.5, t+0.5],
+            [means["treatment_cf_t" + str(t)], means["treatment_cf_t" + str(t)]],
+            linestyle="--",
+            c=colors[6]
+        )
+
     # Counterfactual (naively estimated)
     ax.axhline(
         y=means["treatment_before"] + (means["control_post"] - means["control_before"]),
@@ -439,6 +523,8 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
         color=colors[4],
         label="Counterfactual post-period mean (naively estimated)"
     )
+
+    # Format axis
     format_ax(ax)
     ax.set_title("Treatment group")
     fig.tight_layout()
@@ -531,6 +617,80 @@ def parallel_trends_plot(data, **kwargs):
     ax.set_title("De-meaned (using group's pre-period average) average Y")
 
     fig.tight_layout()
+
+def dynamic_did_plot(res, last_pre_timepoint, **kwargs):
+    """ Plot from dynamix DiD regressions results.
+
+    Parameters
+    ----------
+    res : statsmodels.regression.linear_model.RegressionResultsWrapper
+        Regression result.
+    last_pre_timepoint : int
+        Last pre time point.
+    """
+
+    # kwargs
+    figsize = kwargs.get("figsize", (8, 4))
+    dummy_cols_string = kwargs.get("dummy_cols_string", "dummy_group_x_period")
+
+    # Get coefficients and CIs
+    out = pd.concat([res.params, res.bse], axis=1)
+    out.columns = ["parameter", "std_error"]
+
+    # Scale standard error to 95% CI
+    out['ci'] = out['std_error'] * 1.96
+
+    # We only want time interactions
+    out = out.filter(like=dummy_cols_string, axis=0)
+
+    # Turn the coefficient back to numbers indicating time to treatment
+    out.index = (
+        out.index
+            .str.replace("dummy_group_x_period_", "")
+            .str.replace("m", "-")
+            .astype("int")
+            .rename("time_to_treat")
+    )
+
+    # Add our reference period back in, and sort automatically
+    out = out.reindex(range(out.index.min(), out.index.max()+1)).fillna(0)
+
+    # Transform index from time to treatment to original time units
+    out.index = out.index + (last_pre_timepoint+1)
+
+    # Figure skeleton
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(1, 1, 1)
+    colors = return_colors()
+
+    # Plot the estimates as connected lines with error bars
+    out.plot(
+        y="parameter",
+        yerr="ci",
+        capsize=5,
+        xlabel="t",
+        legend=False,
+        c=colors[1],
+        ax=ax,
+    )
+
+    # Format axis
+    ax.set_title("Dynamic DiD estimated effect")
+    ax.axhline(0, linestyle="dashed", color="k", linewidth=0.5)
+    _ = ax.axvline(
+        last_pre_timepoint+0.5,
+        linestyle="-",
+        c=colors[0],
+        linewidth=2
+    )
+
+    # Print average of the estimated treatment effects
+    print("Average treatment effect, pre: {:.2f} (should be zero!).".format(
+        out.loc[out.index<last_pre_timepoint, "parameter"].mean()
+    ))
+    print("Average treatment effect, post: {:.2f}.".format(
+        out.loc[out.index>last_pre_timepoint, "parameter"].mean()
+    ))
 
 def return_colors():
     """# https://www.learnui.design/tools/data-color-picker.html"""
