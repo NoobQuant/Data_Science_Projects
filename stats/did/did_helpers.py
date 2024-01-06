@@ -357,6 +357,7 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     """
 
     figsize = kwargs.get("figsize", (13, 9))
+    legendloc = kwargs.get("legendloc", "best")
 
     # Check inputs
     assert prints in ["all", "none", "skip time points"], \
@@ -385,7 +386,7 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
             c=colors[0],
             linewidth=2
         )
-        ax.legend()
+        ax.legend(loc=legendloc)
         ax.set_xlim(0-1, no_periods)
 
     # Figure skeleton
@@ -397,14 +398,18 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     ax = fig.add_subplot(2, 1, 1)
 
     # Observations
-    control.plot.scatter(
-        x="t",
-        y="Y",
-        ax=ax,
-        s=1,
-        c=colors[3],
-        alpha=0.2,
-        label="Realized observations"
+    (
+        control
+        .plot
+        .scatter(
+            x="t",
+            y="Y",
+            ax=ax,
+            s=1,
+            c=colors[3],
+            alpha=0.2,
+            label="Realized observations"
+        )
     )
 
     # Pre mean
@@ -446,14 +451,18 @@ def plot_repcrossec_data(data, prints="skip time points", **kwargs):
     ax = fig.add_subplot(2, 1, 2)
 
     # Realized observations
-    treatment.plot.scatter(
-        x="t",
-        y="Y",
-        ax=ax,
-        s=1,
-        c=colors[3],
-        alpha=0.2,
-        label="Realized observations"
+    (
+        treatment
+        .plot
+        .scatter(
+            x="t",
+            y="Y",
+            ax=ax,
+            s=1,
+            c=colors[3],
+            alpha=0.2,
+            label="Realized observations"
+        )
     )
 
     # Pre mean realized
@@ -594,25 +603,38 @@ def parallel_trends_plot(data, **kwargs):
 
     # First axis: averages in absolute units
     ax = fig.add_subplot(2, 1, 1)
-    treatment.groupby(["t"]).agg({"Y": "mean"}) \
-        .rename(columns={"Y": "Treatment group"}) \
+    (
+        treatment
+        .groupby(["t"])
+        .agg({"Y": "mean"})
+        .rename(columns={"Y": "Treatment group"})
         .plot(ax=ax, linestyle="--", marker="o", c=colors[3])
-    control.groupby(["t"]).agg({"Y": "mean"}) \
-        .rename(columns={"Y": "Control group"}) \
+    )
+    (
+        control
+        .groupby(["t"]).agg({"Y": "mean"})
+        .rename(columns={"Y": "Control group"})
         .plot(ax=ax, linestyle="--", marker="o", c=colors[5])
+    )
     ax.axvline(last_pre_timepoint+0.5, c=colors[0])
     ax.set_title("Average Y")
 
     # Second axis: averages in de-meaned units
     ax = fig.add_subplot(2, 1, 2)
-    treatment.groupby(["t"]).agg({"Y": "mean"}) \
-        .subtract(treatment.query("time_group == 'before'").loc[:, "Y"].mean()) \
-        .rename(columns={"Y": "Treatment group"}) \
+    (
+        treatment
+        .groupby(["t"]).agg({"Y": "mean"})
+        .subtract(treatment.query("time_group == 'before'").loc[:, "Y"].mean())
+        .rename(columns={"Y": "Treatment group"})
         .plot(ax=ax, linestyle="--", marker="o", c=colors[3])
-    control.groupby(["t"]).agg({"Y": "mean"}) \
-        .subtract(control.query("time_group == 'before'").loc[:, "Y"].mean()) \
-        .rename(columns={"Y": "Control group"}) \
+    )
+    (
+        control
+        .groupby(["t"]).agg({"Y": "mean"})
+        .subtract(control.query("time_group == 'before'").loc[:, "Y"].mean())
+        .rename(columns={"Y": "Control group"})
         .plot(ax=ax, linestyle="--", marker="o", c=colors[5])
+    )
     ax.axvline(last_pre_timepoint+0.5, c=colors[0])
     ax.set_title("De-meaned (using group's pre-period average) average Y")
 
