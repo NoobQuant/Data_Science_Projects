@@ -12,7 +12,7 @@ def run_dynamics(args):
         S_f=[node],
     )
     dr = debtrank_calculate(ds, nodes_dr)
-    return {"ds": ds, "dr": dr}
+    return {"ds": ds, "dr": dr, "S_f": node}
 
 def prepare_data_for_debtrank(edges, nodes):
     """Prepare network data for DebtRank calculation."""
