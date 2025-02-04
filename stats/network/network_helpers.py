@@ -206,23 +206,19 @@ def debtrank_dynamics(
         )
     def zero_constrained_w(X, statevec_s):
         """Create zero-constrained version of the input matrix."""
-        # Copy data of the original matrix
-        X2_data = X.data.copy()
-
         # Columns from state vector to be constrained to zero
-        cols_to_zero = np.where(statevec_s!="D")[0]
+        cols_to_zero = np.where(statevec_s != "D")[0]
 
-        # Populate data for the constrained matrix 
-        for i in range(X.shape[0]):
-            start_idx = X.indptr[i]
-            end_idx = X.indptr[i + 1]
-            for j in range(start_idx, end_idx):
-                if X.indices[j] in cols_to_zero:
-                    X2_data[j] = 0
+        # Create a mask for the data array
+        mask = np.isin(X.indices, cols_to_zero)
+
+        # Copy data of the original matrix and apply the mask
+        X_data = X.data.copy()
+        X_data[mask] = 0
 
         # Return new sparse matrix with constrained data
         return sc.sparse.csr_matrix(
-            (X2_data, X.indices.copy(), X.indptr.copy()),
+            (X_data, X.indices.copy(), X.indptr.copy()),
             shape=X.shape
         )
 
